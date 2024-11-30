@@ -97,6 +97,8 @@ htbp是LaTX中用于控制浮动体位置的一个选项集。浮动体（如图
 > - <https://download.csdn.net/blog/column/11925364/129816219>
 > - 博客：<https://blog.csdn.net/m0_71819746/article/details/135738780>
 > - 生成工具：<https://www.latex-tables.com/>
+> - [Latex 适配表格常用指令](https://blog.csdn.net/zjc910997316/article/details/117534795)
+> - <https://blog.csdn.net/weixin_48958956/article/details/136423048>
 
 - 一个demo
 
@@ -115,3 +117,10 @@ D5 & D6 & D7 & D8 \\
 \end{table}
 ```
 
+- [Latex 表格&公式大小问题](https://blog.csdn.net/weixin_41724971/article/details/136221296)
+
+在LaTeX中，\setlength{\tabcolsep}{7mm}是一个命令，用于设置表格列之间的间距。tabcolsep是一个长度参数，它定义了表格中每一列两侧的空白距离。
+
+通过使用\setlength{\tabcolsep}{7mm}命令，可以将表格列之间的间距设置为7毫米（mm）。这意味着在该表格中，每个单元格左右两侧将有7mm的空白距离，从而使表格看起来更加宽敞和美观。
+
+这个命令通常用在tabular环境中，用于定制表格的样式和格式。通过调整tabcolsep的值，可以实现不同的列间距效果，以满足具体的排版需求。
