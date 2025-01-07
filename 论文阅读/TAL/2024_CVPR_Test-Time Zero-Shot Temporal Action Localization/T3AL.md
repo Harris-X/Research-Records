@@ -1,5 +1,7 @@
 # **Test-Time Zero-Shot Temporal Action Localization**
 
+https://github.com/benedettaliberatori/T3AL
+
 ### 摘要
 
 零样本时间动作定位（Zero-Shot Temporal Action Localization, ZS-TAL）旨在识别并定位未裁剪视频中在训练期间未见过的动作。现有的ZS-TAL方法通常需要在大量标注的训练数据上微调模型。尽管这些方法有效，但基于训练的ZS-TAL方法假设了监督学习中标注数据的可用性，而这在某些应用中可能是不现实的。此外，训练过程自然会将领域偏差引入模型，这可能会对模型在任意视频上的泛化能力产生负面影响。
