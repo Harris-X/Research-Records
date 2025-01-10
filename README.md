@@ -4,7 +4,7 @@
 
 用于记录个人学习笔记，已经系统整理
 
-研究方向为：Event camera, Action recognition, LVM
+研究方向为：Event camera, Action recognition, VLM
 
 ### 视频链接
 
