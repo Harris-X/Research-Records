@@ -65,6 +65,35 @@ Figure 2:  BYOL minimizes a similarity loss between  $q_{\theta }(z_{\theta })$a
 
 <img src="./assets/c97ddb6d6b0e4832bab422f1330766d8.png" alt="img" style="zoom:80%;" />
 
-对于任意随机变量 z′ ξ， Zθ 和常量 c ，  $\operatorname{Var}\left(z_{\xi}^{\prime} \mid z_{\theta}\right) \leq \operatorname{Var}\left(z_{\xi}^{\prime} \mid c\right)$【Var()是方差】，所以，online network输出c这种情况最多也就是一个局部最优点（loss不是最小)，它不稳定，这样就可以避免collapsed representation了。
+对于任意随机变量 $z^′_ξ$， $Z_θ$ 和常量 c ，  $\operatorname{Var}\left(z_{\xi}^{\prime} \mid z_{\theta}\right) \leq \operatorname{Var}\left(z_{\xi}^{\prime} \mid c\right)$【Var()是方差】，所以，online network输出c这种情况最多也就是一个局部最优点（loss不是最小)，它不稳定，这样就可以避免collapsed representation了。
+
+这个推导说明了为什么损失函数的梯度可以表示为条件方差的期望值的梯度。通过最小化这个梯度，我们可以鼓励模型学习到更稳定的表示，从而避免collapsed representation的问题。
+
+> 在上述推导中，将平方和视为条件方差可能需要更清晰的解释。让我们逐步分析这个概念：
+>
+> 1. **损失函数的展开**：
+>    首先，我们考虑损失函数的展开形式：
+>    $ L(\theta) = E[\|q(z_\theta) - z_\xi'\|_2^2] $
+>    这可以进一步展开为：
+>    $ L(\theta) = E\left[\sum_{i} (q_i(z_\theta) - z_{\xi,i}')^2\right] $
+>    其中 $q_i(z_\theta)$ 和 $z_{\xi,i}'$ 分别是向量 $q(z_\theta)$ 和 $z_\xi'$ 的第 $i$ 个分量。
+>
+> 2. **最优预测器的代入**：
+>    代入最优预测器 $q^\star(z_\theta) = E[z_\xi' | z_\theta]$，我们得到：
+>    $ L(\theta) = E\left[\sum_{i} (E[z_{\xi,i}' | z_\theta] - z_{\xi,i}')^2\right] $
+>
+> 3. **方差的定义**：
+>    方差定义为随机变量与其期望值之差的平方的期望值。对于每个分量 $z_{\xi,i}'$，我们可以计算其在给定 $z_\theta$ 条件下的方差：
+>    $ \text{Var}(z_{\xi,i}' | z_\theta) = E[(z_{\xi,i}' - E[z_{\xi,i}' | z_\theta])^2] $
+>
+> 4. **损失函数与方差的关系**：
+>    将方差的定义代入损失函数的展开形式，我们可以看到：
+>    $ L(\theta) = E\left[\sum_{i} \text{Var}(z_{\xi,i}' | z_\theta)\right] $
+>    这是因为 $E[z_{\xi,i}' | z_\theta]$ 是 $z_{\xi,i}'$ 在给定 $z_\theta$ 条件下的期望值，而 $(E[z_{\xi,i}' | z_\theta] - z_{\xi,i}')^2$ 正是方差定义中的差值平方。
+>
+> 5. **梯度的计算**：
+>    最后，我们计算损失函数关于 $\theta$ 的梯度，这涉及到对每个分量的条件方差的梯度求和：
+>    $ \nabla_{\theta} L(\theta) = \nabla_{\theta} E\left[\sum_{i} \text{Var}(z_{\xi,i}' | z_\theta)\right] $
+>
 
 这个推导是从假设predictor是最优的开始的，所以要保证predictor一直处于接近最优的状态，才能避免collapsed representation，所以target network不可以突变，因为这样会破坏predictor的最优性，所以对target network采用滑动平均的方式更新参数，而不是直接把online network的参数复制过去。
