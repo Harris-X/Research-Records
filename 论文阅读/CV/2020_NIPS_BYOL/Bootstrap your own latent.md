@@ -1,5 +1,7 @@
 # Bootstrap your own latent ：A new approach to self-supervised Learning（BYOL）
 
+> https://zhuanlan.zhihu.com/p/632281645
+
 这篇论文提出了一个新的方法来做自监督的图像的特征学习。使用两个神经网络，即online network和target network，用online network来预测target network输出的特征。之前做自监督常用正负样本进行对比学习，这篇论文的最大的亮点在于完全不用负样本来做自监督学习（世界观），只使用正样本进行学习，是一个全新的想法。为了避免得到collapsed representation，作者引入了target network/mean teacher（方法论）。
 
 ## 一、框架介绍
@@ -10,9 +12,24 @@
 
 Figure 2:  BYOL minimizes a similarity loss between  $q_{\theta }(z_{\theta })$and $\operatorname{sg}\left(z_{\xi}^{\prime}\right)$, where θ are the trained weights, ξ are an exponential moving average of θ and sg means stop-gradient. At the end of training, everything but $f_{\theta }$ is discarded, and $y_{\theta}$ is used as the image representation.（其中t和 t' 代表了一组不同的数据增强)
 1. 先对图像做个数据增强，
+
 2. 再用ResNet提特征，
+
 3. 然后用MLP做个变换，
+
 4. 然后online network再用MLP去预测target network的输出，
+
+   BYOL的具体计算过程和代码实现都是非常简单的 
+
+   （1）初始化两个encoder分别为student和teacher model，二者架构完全相同； 
+
+   （2）一张image做两次dataaug得到这张image的两个views； 
+
+   （3）view1进入student model ，得到Z0的representation，view2 进入teacher model，得到Z1的representation； 
+
+   （4）Z0 再接一个prediction layer 直接去预测Z1； 
+
+   （5）整个过程中，student model是正常训练的，而teacher model则是通过exponential moving average student model的weights 的方式更新的，类似于mean teacher；
 
 > 在自监督学习中，“online network”通常是指一个动态更新、参与学习过程的神经网络，以下是具体解释： 
 >
