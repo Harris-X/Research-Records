@@ -118,7 +118,11 @@ Vaswani等人[40]提出了用于机器翻译的变换器，之后很快成为序
 
  $$ \text{Emb}_{\text{long}} = \text{Decoder}\left(\text{Emn}_{n1}, \text{Decoder}\left(\text{Emb}_{n0}, F_{\text{long}}\right)\right). $$ 
 
-长期上下文  $ F_{\text{long}} \in \mathbb{R}^{T_{\text{long}} \times H' \times W' \times C'} $  （ $ T_{\text{long}} = (2w + 1) T' $  $  是一个缓冲区，包含从沿时间连接的长  $ 2w $  相邻剪辑中提取的骨干特征。为了将长期视频特征缓冲压缩到具有较低时间维度的嵌入  $ \text{Emb}_{\text{long}} $ ，我们应用两个堆叠解码器，具有两个令牌嵌入  $ \text{Emb}_{n0} $  和  $ \text{Emb}_{n1} $ 。具体来说，我们首先应用压缩令牌  $ \text{Emb}_{n0} $ （ $ n_0 < T_{\text{long}} $  $  从  $ F_{\text{long}} $  查询重要信息，并得到具有时间维度  $ n_0 $  的中间压缩嵌入。然后我们进一步利用另一个压缩令牌  $ \text{Emb}_{n1} $ （ $ n_1 < n_0 $  $  查询中间压缩嵌入，并得到最终压缩嵌入  $ \text{Emb}_{\text{long}} $ 。 $ \text{Emb}_{\text{long}} $  包含长期视频信息，但具有较低的时间维度  $ n_1 $ 。然后我们采用交叉注意力层到  $ F_b $  和  $ \text{Emb}_{\text{long}} $  生成长期上下文特征  $ F_{\text{lt}} \in \mathbb{R}^{T' \times H' \times W' \times C'} $ ：
+长期上下文  $ F_{\text{long}} \in \mathbb{R}^{T_{\text{long}} \times H' \times W' \times C'} $  （ $ T_{\text{long}} = (2w + 1) T' $  $  是一个缓冲区，包含从沿时间连接的长
+
+$ 2w $  相邻剪辑中提取的骨干特征。为了将长期视频特征缓冲压缩到具有较低时间维度的嵌入  $ \text{Emb}_{\text{long}} $ ，我们应用两个堆叠解码器，具有两个令牌嵌入  $ \text{Emb}_{n0} $  和  $ \text{Emb}_{n1} $ 。具体来说，我们首先应用压缩令牌  $ \text{Emb}_{n0} $ （ $ n_0 < T_{\text{long}} $    从  
+
+$ F_{\text{long}} $  查询重要信息，并得到具有时间维度  $ n_0 $  的中间压缩嵌入。然后我们进一步利用另一个压缩令牌  $ \text{Emb}_{n1} $ （ $ n_1 < n_0 $   查询中间压缩嵌入，并得到最终压缩嵌入  $ \text{Emb}_{\text{long}} $ 。 $ \text{Emb}_{\text{long}} $  包含长期视频信息，但具有较低的时间维度  $ n_1 $ 。然后我们采用交叉注意力层到  $ F_b $  和  $ \text{Emb}_{\text{long}} $  生成长期上下文特征  $ F_{\text{lt}} \in \mathbb{R}^{T' \times H' \times W' \times C'} $ ：
 
 
  $$ F_{\text{lt}} = CA\left(F_b, \text{Emb}_{\text{long}}\right), $$ 
