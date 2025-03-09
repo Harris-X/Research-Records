@@ -1,10 +1,8 @@
-# 24级研究记录
+# 研究记录
 
 ### 介绍
 
-用于记录个人学习笔记，已经系统整理
-
-研究方向为：Event camera, Action recognition, VLM
+研究方向为：Event camera, SNN，VLM
 
 ### 视频链接
 
