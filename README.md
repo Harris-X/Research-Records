@@ -2,7 +2,7 @@
 
 ### 介绍
 
-研究方向为：Event camera, SNN，VLM
+研究方向为：event camera, action recoginition, snn, model merging
 
 ### 视频链接
 
