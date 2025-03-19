@@ -26,7 +26,7 @@
 
 ### A. Preliminaries
 
-\### 我们首先回顾在同构架构中合并模型的方法。将模型$\mathcal{L}$视为由层$L_i \in \mathcal{L}$组成的集合，每层都有一组参数（例如，对于线性层，有$W_i$和$b_i$）。合并两个模型$\mathcal{L}^A$和$\mathcal{L}^B$的任务，涉及将它们的参数融合到一个新模型$\mathcal{L}^*$中，使得$\mathcal{L}^*$在$\mathcal{L}^A$和$\mathcal{L}^B$各自的原始任务上保持准确性。当$\mathcal{L}^A$和$\mathcal{L}^B$是从相同的检查点进行微调时，一些研究[11, 25]已经证明，合并过程就像对它们的权重进行平均一样直接。例如，如果$L_i$表示一个线性层，且$W_i^A, W_i^B \in \mathbb{R}^{n_i n^{i - 1}}$，其中$n_i$表示第$i$层的维度，那么新的权重矩阵$W_i^*$可以简单表示为： 
+我们首先回顾在同构架构中合并模型的方法。将模型$\mathcal{L}$视为由层$L_i \in \mathcal{L}$组成的集合，每层都有一组参数（例如，对于线性层，有$W_i$和$b_i$）。合并两个模型$\mathcal{L}^A$和$\mathcal{L}^B$的任务，涉及将它们的参数融合到一个新模型$\mathcal{L}^*$中，使得$\mathcal{L}^*$在$\mathcal{L}^A$和$\mathcal{L}^B$各自的原始任务上保持准确性。当$\mathcal{L}^A$和$\mathcal{L}^B$是从相同的检查点进行微调时，一些研究[11, 25]已经证明，合并过程就像对它们的权重进行平均一样直接。例如，如果$L_i$表示一个线性层，且$W_i^A, W_i^B \in \mathbb{R}^{n_i n_{i - 1}}$，其中$n_i$表示第$i$层的维度，那么新的权重矩阵$W_i^*$可以简单表示为： 
 
 $ \boldsymbol{W}_i^* = \frac{1}{2}\boldsymbol{W}_i^A + \frac{1}{2}\boldsymbol{W}_i^B \tag{1} $ 
 

@@ -61,6 +61,17 @@ $$
 
 最后，我们通过加法将  $\hat{\delta}^t$  和  $\theta_{\text{PRE}}$  结合起来，以获得用于推理的参数，即  $\theta_{\text{DARE}}^t = \hat{\delta}^t + \theta_{\text{PRE}}$ 。我们证明，即使在去除大多数delta参数后，DARE也可以通过近似原始嵌入来很好地保持模型性能。
 
+
+
+以下是对这三个公式的详细解释： 
+
+1. **公式一：$m^t \sim \text{Bernoulli}(p)$**    - 这里的$m^t$是一个与任务$t$相关的向量（其维度与$\delta^{t}$相同）。    - $\text{Bernoulli}(p)$是伯努利分布，是一种离散概率分布。对于伯努利分布，随机变量只有两种可能的取值，通常记为 0 和 1 。参数$p$表示取值为 1 的概率，那么取值为 0 的概率就是$1 - p$。    - 该公式的含义是，根据概率$p$对向量$m^t$的每个元素进行随机采样，每个元素要么取值为 0，要么取值为 1 。也就是说，向量$m^t$中的每个元素都以概率$p$取值为 1，以概率$1 - p$取值为 0 。这一步是为后续的参数丢弃操作做准备，$m^t$中取值为 1 的元素对应的$\delta^{t}$中的元素将被丢弃（后续会被重置为 0 ）。
+
+2. **公式二：$\tilde{\delta}^t = (1 - m^t) \odot \delta^t$**    - 其中$\odot$表示元素级的乘法（Hadamard积）。    - 对于向量$1 - m^t$，它是将$m^t$中的每个元素取反（0 变为 1，1 变为 0 ）得到的。    - 然后将$1 - m^t$与$\delta^{t}$进行元素级乘法。这样做的效果是，当$m^t$中的某个元素为 1 时（对应前面以概率$p$采样为 1 的情况），$1 - m^t$中该位置的元素为 0，那么$\tilde{\delta}^t$中对应位置的元素就会被置为 0，实现了对$\delta^{t}$中部分参数的丢弃（重置为 0 ）；当$m^t$中的某个元素为 0 时，$1 - m^t$中该位置的元素为 1，$\tilde{\delta}^t$中对应位置的元素就保持为$\delta^{t}$中该位置的原始值。 
+3. **公式三：$\hat{\delta}^t = \tilde{\delta}^t / (1 - p)$**    - 这一步是对经过丢弃操作后的$\tilde{\delta}^t$进行重新缩放。    - 因为在前面的丢弃操作中，以概率$p$丢弃了$\delta^{t}$中的部分参数（将其值设为 0 ），为了保持模型输出的期望大致不变，需要对剩余的参数进行缩放。这里将$\tilde{\delta}^t$的每个元素都除以$1 - p$ 。由于被丢弃的参数（值为 0 的部分）除以$1 - p$后仍然为 0，**所以实际上只是对未被丢弃的参数进行了缩放调整，使得整体的参数分布在某种程度上能够补偿因参数丢弃带来的影响，**以维持模型输出期望的稳定性。   通过这三个步骤，就完成了对$\delta^{t}$的处理，得到了$\hat{\delta}^t$，后续将其与$\theta_{PRE}$相加就得到了用于推理的参数$\theta_{DARE}^{t}$。 
+
+
+
 #### 理论分析
 
 我们讨论线性变换，因为大多数语言模型（LMs）的参数在这一基本操作中发挥作用（例如，前馈网络中的计算、自注意力模块中的查询、键、值和输出的投影）。设  $W/\Delta W \in \mathbb{R}^{m \times n}$  和  $b/\Delta b \in \mathbb{R}^m$  为预训练/delta 参数。输入是一个向量  $x \in \mathbb{R}^n$ 。原始嵌入  $h \in \mathbb{R}^m$  的第  $i$  个（ $1 \leq i \leq m$ ）维度的期望值由下式计算：
@@ -107,11 +118,81 @@ $$
 = h_i^{\text{PRE}} + (1 - p) \cdot \gamma \cdot \Delta h_i.
 $$
 
-通过设置  $\gamma = 1/(1 - p)$ ，我们有  $\mathbb{E}[h_i] = \mathbb{E}[\hat{h}_i]$ ，得出 DARE 可以近似原始嵌入。
+**通过设置  $\gamma = 1/(1 - p)$ ，我们有  $\mathbb{E}[h_i] = \mathbb{E}[\hat{h}_i]$ ，得出 DARE 可以近似原始嵌入。**
 
 备注:我们已经给出了DARE工作原理的粗略证明。在实际应用中，我们发现当跌落率p设置适当时，DARE是适用的，并且p的容差随lm参数的大小而增大。此外，删除微调参数而不是增量参数将导致灾难性的性能下降。一个有希望的未来方向是更深入地探索DARE，例如推断关于LM容量的p的上界，并说明微调参数和delta参数之间的内在差异。
 
 最后，我们强调了DARE和Dropout之间的联系和差异(Srivastava et al.， 2014)。这两种方法都涉及随机删除和重新缩放操作，但它们在两个关键方面有所不同:(1)DARE处理delta参数，而Dropout处理模型输出;(2) DARE的目的是在不进行训练的情况下减少delta参数冗余，永久消除delta参数，只保留其他参数用于推理。Dropout用于防止模型过度拟合，它在训练期间暂时删除部分输出，但保留所有输出用于推理。
+
+### 原始嵌入期望值的推导 
+
+#### 第一个公式 
+
+$$\mathbb{E}[h_i] = \mathbb{E} \left[ \sum_{j=1}^{n} \left( w_{ij} + \Delta w_{ij} \right) x_j + \left( b_i + \Delta b_i \right) \right]$$ 
+
+**背景**：在一个线性变换中，输入向量 $x \in \mathbb{R}^n$ 经过矩阵 $W + \Delta W$ （$W$ 是预训练参数矩阵，$\Delta W$ 是delta参数矩阵）的变换，再加上偏置向量 $b + \Delta b$ （$b$ 是预训练偏置向量，$\Delta b$ 是delta偏置向量），得到输出向量 $h$。这里计算输出向量 $h$ 的第 $i$ 个维度的期望值。 
+
+**含义**：对于输出向量 $h$ 的第 $i$ 个维度，其值由输入向量 $x$ 与矩阵 $W + \Delta W$ 的第 $i$ 行的元素相乘并求和，再加上偏置项 $b_i+\Delta b_i$ 得到。由于参数可能存在随机性（比如在某些情况下参数是从某个分布中采样得到的），所以这里求期望值。 
+
+#### 第二个公式 
+
+$$= \sum_{j=1}^{n} x_j \mathbb{E}[w_{ij}] + \mathbb{E}[b_i] + \sum_{j=1}^{n} x_j \mathbb{E}[\Delta w_{ij}] + \mathbb{E}[\Delta b_i]$$ 
+
+**推导依据**：这一步运用了期望的线性性质。期望的线性性质表明，对于任意随机变量 $A$、$B$ 和常数 $c$，有 $\mathbb{E}(A + B)=\mathbb{E}(A)+\mathbb{E}(B)$ 以及 $\mathbb{E}(cA)=c\mathbb{E}(A)$。在公式中，先将求和与期望交换顺序，然后对每一项分别求期望，就得到了这个结果。 
+
+**含义**：将输入向量 $x$ 与预训练参数、delta参数分别求期望后再进行线性组合，同时加上预训练偏置和delta偏置的期望值。
+
+#### 第三个公式 
+
+$$= \sum_{j=1}^{n} w_{ij} x_j + b_i + \sum_{j=1}^{n} \Delta w_{ij} x_j + \Delta b_i = h_i^{\text{PRE}} + \Delta h_i$$ 
+
+ **推导依据**：通常假设预训练参数 $w_{ij}$ 和delta参数 $\Delta w_{ij}$ 以及偏置 $b_i$ 和 $\Delta b_i$ 是确定的值，而不是随机变量（即它们的期望值就是它们本身），所以 $\mathbb{E}[w_{ij}]=w_{ij}$，$\mathbb{E}[\Delta w_{ij}]=\Delta w_{ij}$，$\mathbb{E}[b_i]=b_i$，$\mathbb{E}[\Delta b_i]=\Delta b_i$。 
+
+**含义**：将前面的式子化简后，得到预训练模型在输入 $x$ 下的第 $i$ 个维度的输出 $h_i^{\text{PRE}}=\sum_{j=1}^{n} w_{ij} x_j + b_i$ 与delta部分的输出 $\Delta h_i=\sum_{j=1}^{n} \Delta w_{ij} x_j + \Delta b_i$ 之和。 
+
+### 使用 DARE 后嵌入期望值的推导 
+
+#### 第一个公式 
+
+$$\mathbb{E}[\hat{h}_i] = \mathbb{E} \left[ \sum_{j=1}^{n} \left( w_{ij} + \Delta \tilde{w}_{ij} \right) x_j + \left( b_i + \Delta \tilde{b}_i \right) \right]$$ 
+
+**背景**：使用 DARE 方法对delta参数进行处理后，delta参数变为 $\Delta \tilde{W}$ 和 $\Delta \tilde{b}$ 。这里计算经过 DARE 处理后的输出向量 $\hat{h}$ 的第 $i$ 个维度的期望值。 
+
+**含义**：与前面类似，只是将原来的delta参数替换为经过 DARE 处理后的delta参数。
+
+#### 第二个公式 
+
+$$= \sum_{j=1}^{n} x_j \mathbb{E}[w_{ij}] + \mathbb{E}[b_i] + \sum_{j=1}^{n} x_j \mathbb{E}[\Delta \tilde{w}_{ij}] + \mathbb{E}[\Delta \tilde{b}_i]$$ 
+
+**推导依据**：同样是运用期望的线性性质，将求和与期望交换顺序，对每一项分别求期望。 
+
+**含义**：将输入向量 $x$ 与预训练参数、经过 DARE 处理后的delta参数分别求期望后再进行线性组合，同时加上预训练偏置和经过 DARE 处理后的delta偏置的期望值。 #### 第三个公式 $$= \sum_{j=1}^{n} w_{ij} x_j + b_i + \sum_{j=1}^{n} x_j ((1 - p) \cdot \gamma \cdot \Delta w_{ij} + p \cdot 0) + ((1 - p) \cdot \gamma \cdot \Delta b_i + p \cdot 0)$$ 
+
+**推导依据**：DARE 方法以概率 $p$ 随机丢弃delta参数，对于被丢弃的参数（概率为 $p$ ），其值变为 0；对于未被丢弃的参数（概率为 $1 - p$ ），会乘以缩放因子 $\gamma$ 。所以 $\Delta \tilde{w}_{ij}$ 的期望值为 $(1 - p) \cdot \gamma \cdot \Delta w_{ij} + p \cdot 0$ ，$\Delta \tilde{b}_i$ 的期望值为 $(1 - p) \cdot \gamma \cdot \Delta b_i + p \cdot 0$ 。 
+
+**含义**：考虑了 DARE 方法对delta参数的丢弃和缩放操作后，重新计算输入向量 $x$ 与预训练参数、delta参数的线性组合以及偏置项。 
+
+#### 第四个公式 
+
+$$= h_i^{\text{PRE}} + (1 - p) \cdot \gamma \cdot \left( \sum_{j=1}^{n} \Delta w_{ij} x_j + \Delta b_i \right)$$ 
+
+**推导依据**：将前面式子中的 $\sum_{j=1}^{n} w_{ij} x_j + b_i$ 合并为 $h_i^{\text{PRE}}$ ，将 $\sum_{j=1}^{n} x_j \Delta w_{ij} + \Delta b_i$ 合并为 $\Delta h_i$ 。 
+
+**含义**：经过 DARE 处理后的输出可以表示为预训练模型的输出加上经过缩放的delta部分的输出。 
+
+#### 第五个公式 
+
+$$= h_i^{\text{PRE}} + (1 - p) \cdot \gamma \cdot \Delta h_i$$
+
+**推导依据**：这是对上一步式子的进一步简化，将 $\sum_{j=1}^{n} \Delta w_{ij} x_j + \Delta b_i$ 用 $\Delta h_i$ 表示。 
+
+**含义**：更简洁地表示了经过 DARE 处理后的输出与预训练模型输出和delta部分输出的关系。 ### 设置缩放因子使期望值相等 通过设置 $\gamma = 1/(1 - p)$ ，我们有 $\mathbb{E}[h_i] = \mathbb{E}[\hat{h}_i]$ 。 
+
+**推导依据**：将 $\gamma = 1/(1 - p)$ 代入 $\mathbb{E}[\hat{h}_i]=h_i^{\text{PRE}} + (1 - p) \cdot \gamma \cdot \Delta h_i$ 中，得到 $\mathbb{E}[\hat{h}_i]=h_i^{\text{PRE}} + (1 - p) \cdot \frac{1}{1 - p} \cdot \Delta h_i=h_i^{\text{PRE}} + \Delta h_i=\mathbb{E}[h_i]$ 。 
+
+**含义**：当缩放因子 $\gamma$ 取 $1/(1 - p)$ 时，经过 DARE 处理后的输出的期望值与原始输出的期望值相等，这说明 DARE 方法可以近似原始嵌入。
+
+
 
 #### 3.2. 用DARE合并模型
 

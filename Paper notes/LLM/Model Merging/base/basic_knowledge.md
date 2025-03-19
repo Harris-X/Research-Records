@@ -63,6 +63,7 @@ Model Merging在LLM时代也是合时宜的技术，因为它：
 - 通过相减得到每个SFT Model的delta parameter  $\delta_{SFT1}, \delta_{SFT2} \ldots \delta_{SFTn}$ 
 
 **输出**
+
 - 1个merged Model  $\theta_{Merge}$ 
 
 ### Simple Averaging
@@ -89,6 +90,25 @@ $$
 $$
 \hat{F}_t = \mathbb{E}_{x \sim D_t} \mathbb{E}_{y \sim p_{\theta_t}(y|x)} \nabla_{\theta_t} (\log p_{\theta_t} (y|x_t))^2
 $$
+
+
+
+###  [SLERP](https://zhida.zhihu.com/search?content_id=238507877&content_type=Article&match_order=1&q=SLERP&zhida_source=entity)
+
+**球面线性插值**(SLERP) 是一种用于在两个向量之间平滑插值的方法。它保持恒定的变化率并保留矢量所在的球形空间的几何特性。
+
+选择 SLERP 而不是传统线性插值有几个原因。例如，在高维空间中，线性插值可以导致插值向量的**幅度减小**（即，它减小了权重的尺度）。此外，权重方向的变化通常代表比变化幅度**更有意义的信息（如特征学习和表示）。**
+
+SLERP 通过以下步骤实施：
+
+1. 将输入向量标准化为单位长度，确保它们代表方向而不是幅度
+2. 使用它们的点积计算这些向量之间的角度。
+3. 如果向量几乎共线，则默认使用线性插值以提高效率。否则，SLERP 根据插值因子`t`（`t=0`= 第一个向量的 100%，`t=1`= 模型 2 的 100%）和向量之间的角度计算比例因子。
+4. 这些因子用于对原始向量进行加权，然后将其相加以获得插值向量。
+
+SLERP是目前最流行的合并方法，但它仅限于一次只能合并两个模型。仍然可以分层组合多个模型，如[Mistral-7B-Merge-14-v0.1](https://link.zhihu.com/?target=https%3A//huggingface.co/EmbeddedLLM/Mistral-7B-Merge-14-v0.1)中所示。
+
+
 
 ### Task Arithmetic*
 
@@ -125,10 +145,25 @@ $$
 
 TIES[5]的核心思想是**尽量减少干扰（interference）**，从而取得更好的模型融合效果。
 
+TIES-Merging 方法解决了模型融合过程中的两个主要问题：
+
+- 冗余参数值的干扰（Interference from Redundant Parameters）： 在微调过程中，许多模型参数可能会发生变化，但这些变化对模型性能的影响可能非常小。当合并这些模型时，这些冗余的参数值可能会干扰那些对性能有显著影响的参数。TIES-Merging 通过修剪这些冗余参数值来减少这种干扰，从而保留那些对性能有实质性贡献的参数。
+- 参数符号不一致的干扰（Interference from Sign Disagreement）： 不同的微调模型可能会对同一参数产生相反的更新（即正负号不一致）。简单地对这些参数值进行平均可能会导致性能下降，因为合并后的参数值可能无法正确反映任何单一模型的更新方向。TIES-Merging 通过Elect每个参数的最终符号来解决这个问题，确保合并后的参数值在所有模型中保持一致的符号方向。
+
 作者提出有两类干扰：
 
 1. **冗余参数带来的干扰**，这类干扰就像noise；
 2. **delta parameter的不同方向带来的干扰**，例如任务1要往东走、任务2要往西走，两者相加带来抵消，使得两个任务都做不好。
+
+
+
+TIES-Merging分为以下三个步骤：
+
+1. 修剪（Trim）： 在这一步中，TIES-Merging 对于每个任务的参数变化（任务向量）进行修剪，只保留那些在微调过程中变化幅度较大的参数值。具体来说，它会根据参数值的大小来保留前k%的参数，并将剩余的参数值重置为0（或恢复到预训练模型的初始值）。这样，可以消除那些对性能影响不大的冗余参数，减少它们在合并过程中可能带来的干扰。
+2. 选举（Elect）： 在修剪参数后，可能会存在一些参数在不同模型中具有相反的符号（正负号不一致）。为了解决这个问题，TIES-Merging 会创建一个聚合的选举符号向量，这个向量会根据每个参数在不同模型中总的正负方向变化来决定最终的符号。对于每个参数，它会计算所有模型中该参数值的总和（正向和负向），然后选择总和绝对值较大的方向作为该参数的最终符号。
+3. 不相交合并（Disjoint Merge）： 在确定了每个参数的最终符号后，TIES-Merging 会进行不相交合并。对于每个参数，它会计算那些与最终符号一致的模型的参数值的平均值。这样，只有那些在所有模型中都具有相同符号的参数值会被考虑在内，从而避免了符号不一致导致的干扰。
+
+
 
 `TIES`就是为了解决这两类干扰。其框架图如下：
 
@@ -152,6 +187,31 @@ $$
 ### **DARE**
 
 `DARE`方法前文已有介绍，其本身并不直接merge，而是提供了一种对`delta parameters`进行稀疏化的工具，因此可以作为**预处理方法，被应用到任何一个merge方法之中**。
+
+Yu等人介绍。(2023)，[DARE](https://link.zhihu.com/?target=https%3A//arxiv.org/abs/2311.03099)使用与 TIES 类似的方法，但有两个主要区别：
+
+- **修剪**：DARE 将微调权重随机重置为其原始值（基本模型的权重）。
+- **重新调整**：DARE 重新调整权重以保持模型输出的期望大致不变。它将两个（或多个）模型的重新调整后的权重添加到具有比例因子的基本模型的权重中。
+
+<img src="./assets/v2-8f04abef48ff3a9ecee1d0cb15bd038b_1440w.jpg" alt="img" style="zoom:67%;" />
+
+
+
+研究者们提出的DARE方法非常简单，仅由两部分组成：**丢弃和重新缩放**，其工作流程如图2所示。 $\theta_{PRE}$表示预训练基模型的参数，**$\theta_{SFT}^{t}$代表**在预训练模型的基础上**针对任务$t$进行SFT得到的模型参数。**给定delta参数$\delta^{t}=\theta_{SFT}^{t}-\theta_{PRE}$，DARE首先根据丢弃率$p$对$\delta^{t}$进行随机丢弃（将它们的值重置为零），然后将剩余的参数乘以$1/(1 - p)$，计算过程如下：
+
+$$\begin{align*}
+m^t &\sim \text{Bernoulli}(p), \\
+\tilde{\delta}^t &= (1 - m^t) \odot \delta^t, \\
+\hat{\delta}^t &= \tilde{\delta}^t / (1 - p).
+\end{align*}$$
+
+最后，研究者们将$\widehat{\delta}^{t}$和$\theta_{PRE}$相加来得到用于推理的参数，即$\theta_{DARE}^{t}=\widehat{\delta}^{t}+\theta_{PRE}$。研究者们指出重新缩放操作在DARE中是极其重要的，它能够保持模型输出的期望大致不变。后续的实验也展示了该操作的有效性。 
+
+#### 理论推导
+
+**通过设置  $\gamma = 1/(1 - p)$ ，我们有  $\mathbb{E}[h_i] = \mathbb{E}[\hat{h}_i]$ ，得出 DARE 可以近似原始嵌入。**
+
+
 
 ## **模型融合的技术特性**
 
@@ -180,6 +240,8 @@ Multi-Task Learning的另一个重要特性是OOD Generalization，这也是融�
 <img src="./assets/v2-b5fddba20919789be3a346028c7721bf_1440w.jpg" alt="img" style="zoom:80%;" />
 
 从`TIES`论文的实验来看，融合模型的OOD Generalization能力还不错，说明**融合模型在一定程度上学到了鲁棒的task解决能力**。
+
+
 
 ### **其他使用场景**
 
