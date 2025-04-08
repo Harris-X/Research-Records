@@ -27,7 +27,7 @@ LoRA（低秩适配器，Low - Rank Adaptation）采用轻量级模块，针对�
 
 其中，$y_t$ 表示第 $t$ 步的标记，$\mathbf{y}_{<t}$ 是前缀序列，$\boldsymbol{\theta}_{\text{base}}$ 表示基础大语言模型的参数。 
 
-#### LoRA 
+#### LoRA
 
 LoRA（Hu 等人，2022）是一种参数高效微调方法，在某些场景下可以达到与全量微调相当的性能，但计算成本显著降低。具体来说，对于模型中的一个给定矩阵 $W \in \mathbb{R}^{m \times d}$，我们可以学习两个低秩矩阵 $A \in \mathbb{R}^{r \times d}$ 和 $B \in \mathbb{R}^{m \times r}$ 来近似 $W$ 的参数更新：
 
@@ -43,7 +43,7 @@ $ \mathbf{h}' = W\mathbf{x} + \lambda\Delta W_1\mathbf{x} + (1 - \lambda)\Delta 
 
 **其中，融合权重 $w_1$ 和 $w_2$ 是通过少样本学习得到的。虽然LoRA - Hub能够自动确定不同LoRA的融合权重，但对于给定任务，不同标记的权重保持相同。这种共享权重方案可能会限制所涉及LoRA在需要多种上下文的复杂生成任务中的表达能力。**
 
-### 3 方法 
+### 3 方法
 
 为了更灵活地处理生成性任务，我们提出了LoRA - Flow，该方法在每个生成步骤中使用动态融合权重。接下来，我们将首先介绍融合权重的计算方式（3.1节），然后详细说明如何将这些权重整合到模型中（3.2节）。最后，我们将在3.3节中描述训练算法。
 
@@ -51,7 +51,7 @@ $ \mathbf{h}' = W\mathbf{x} + \lambda\Delta W_1\mathbf{x} + (1 - \lambda)\Delta 
 
 图2:左:我们使用分层融合门来促进动态LoRA融合，将每层的输入隐藏状态投影到融合权值中。右:对于某个模块，使用提供的融合权重来聚合不同lora的输出。由于我们的目标是利用现有lora获得的能力来处理新任务，因此我们只使用几个示例来训练融合门，同时保持模型和lora冻结。融合门的参数数量仅为LoRA的0.2%左右。
 
-### 3.1 计算融合权重 
+### 3.1 计算融合权重
 
 在第 $t$ 步，我们旨在使用前缀 $\mathbf{y}_{<t}$ 来确定融合权重，该前缀捕捉了当前标记的上下文。鉴于基础模型已经将上下文信息压缩到隐藏向量中，我们建议直接利用第 $t$ 步的隐藏状态，以避免冗余计算。 隐藏状态有三个层级，每个层级包含不同粒度的信息： 
 
@@ -73,9 +73,13 @@ $ \mathbf{h}' = \mathbf{h} + \Delta \mathbf{h}\mathbf{w}^l \quad (6) $
 
 其中 $\mathbf{h}$ 是基础模型中模块的输出。图2展示了一个示例。 
 
-### 3.3 训练 
+### 3.3 训练
 
-对于基础模型 $\boldsymbol{\theta}_{\text{base}}$ 和一组现有的已学习LoRA $\boldsymbol{\theta}_{\text{LoRA}} = \{\boldsymbol{\theta}_{\text{LoRA}}^1, \cdots, \boldsymbol{\theta}_{\text{LoRA}}^k\}$ ，我们在新任务上训练融合门 $\boldsymbol{\theta}_{\text{fusion}}$： $ \hat{\boldsymbol{\theta}}_{\text{fusion}} = \underset{\boldsymbol{\theta}_{\text{fusion}}}{\text{argmax}} \{\mathcal{L}(\boldsymbol{\theta}_{\text{total}}|\mathcal{D}_{\text{new}})\} \quad (7) $ 其中 $\boldsymbol{\theta}_{\text{total}} = \boldsymbol{\theta}_{\text{base}} \cup \boldsymbol{\theta}_{\text{LoRA}} \cup \boldsymbol{\theta}_{\text{fusion}}$ 表示总参数。似然定义为：
+对于基础模型 $\boldsymbol{\theta}_{\text{base}}$ 和一组现有的已学习LoRA $\boldsymbol{\theta}_{\text{LoRA}} = \{\boldsymbol{\theta}_{\text{LoRA}}^1, \cdots, \boldsymbol{\theta}_{\text{LoRA}}^k\}$ ，我们在新任务上训练融合门 $\boldsymbol{\theta}_{\text{fusion}}$： 
+
+$ \hat{\boldsymbol{\theta}}_{\text{fusion}} = \underset{\boldsymbol{\theta}_{\text{fusion}}}{\text{argmax}} \{\mathcal{L}(\boldsymbol{\theta}_{\text{total}}|\mathcal{D}_{\text{new}})\} \quad (7) $ 
+
+其中 $\boldsymbol{\theta}_{\text{total}} = \boldsymbol{\theta}_{\text{base}} \cup \boldsymbol{\theta}_{\text{LoRA}} \cup \boldsymbol{\theta}_{\text{fusion}}$ 表示总参数。似然定义为：
 
  $ \mathcal{L}(\boldsymbol{\theta}_{\text{total}}|\mathcal{D}_{\text{new}}) = \sum_{i = 1}^{N} P(\mathbf{y}_i|\boldsymbol{\theta}_{\text{total}}) \quad (8) $
 
