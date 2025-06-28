@@ -1,5 +1,99 @@
 # “TIES-MERGING: Resolving Interference When Merging Models”
 
+好的，我们来详细说明一下 TIES-MERGING 方法，特别是其中涉及的公式和符号。
+
+### **核心思想**
+
+[cite\_start]TIES-MERGING 是一种旨在合并多个经过微调的（fine-tuned）神经网络模型，以创建一个单一的多任务模型的方法 [cite: 2, 20][cite\_start]。现有模型合并方法，如简单的权重平均，在合并多个模型时常常会因为不同模型参数间的\*\*干扰（interference）\*\*而导致性能下降 [cite: 2, 23]。
+
+[cite\_start]TIES-MERGING 认为，这种干扰主要来自两个方面 [cite: 3]：
+
+1.  [cite\_start]**来自冗余参数的干扰**：在模型微调过程中，许多参数的改变对模型性能影响很小，是冗余的 [cite: 24][cite\_start]。当一个对某个模型至关重要的参数与其他模型中相应位置的冗余参数合并时，其重要性会被稀释，从而影响最终模型的性能 [cite: 25]。
+2.  [cite\_start]**来自参数符号不一致的干扰**：对于同一个参数，不同模型微调后可能会呈现出相反的符号（一个为正，一个为负） [cite: 26][cite\_start]。直接对这些值进行平均，会使得参数的绝对值减小，从而损害其在各项任务上的表现 [cite: 27, 28]。
+
+[cite\_start]为了解决这两个问题，TIES-MERGING 提出了一个包含三个新颖步骤的合并流程：**修剪（Trim）**、**选举符号（Elect Sign）** 和 **合并（Merge）** [cite: 4, 30]。
+
+### **方法详解与公式解析**
+
+在详细介绍步骤之前，我们先来理解一个核心概念：**任务向量（Task Vector）**。
+
+#### **任务向量 (Task Vector)**
+
+[cite\_start]任务向量代表了模型为了适应特定任务，其参数相对于初始预训练模型所发生的变化 [cite: 22, 66]。
+
+  - **符号定义**：
+
+      - $\\theta\_{init}$：表示预训练模型的初始参数。
+      - $\\theta\_{ft}^{t}$：表示在任务 *t* 上微调后的模型参数。
+      - $\\tau\_{t}$：表示任务 *t* 的任务向量。
+
+  - **计算公式**：
+    [cite\_start]$$\tau_{t} = \theta_{ft}^{t} - \theta_{init} \quad [cite: 67]$$
+    [cite\_start]这个公式计算出的向量 $\\tau\_{t}$，其维度与模型参数量相同（记为 *d*），向量中的每一个值都代表了相应参数在微调过程中发生的变化量 [cite: 67]。TIES-MERGING 正是对这些任务向量进行操作，而不是直接操作模型权重。
+
+  - **任务向量的分解**：
+    [cite\_start]任务向量 $\\tau\_{t}$ 可以被分解为其**符号（sign）和幅度（magnitude）** [cite: 86]。
+    [cite\_start]$$\tau_{t} = \gamma_{t} \odot \mu_{t} \quad [cite: 86]$$
+
+      - [cite\_start]$\\gamma\_{t} = sgn(\\tau\_{t})$：这是**符号向量**，其中每个元素为 +1、-1 或 0，代表了对应参数变化的方向（增加、减少或不变） [cite: 85, 87]。
+      - [cite\_start]$\\mu\_{t} = |\\tau\_{t}|$：这是**幅度向量**，其中每个元素都是非负值，代表了对应参数变化的绝对大小 [cite: 88]。
+      - [cite\_start]$\\odot$：表示元素对应相乘（elementwise product） [cite: 86]。
+
+#### **TIES-MERGING 的三个步骤**
+
+以下是 TIES-MERGING 方法的具体流程，并附有图示说明（可参考下图）。
+
+\<img src="[https://storage.googleapis.com/showcase-9fde748c/images/documents/2306.pdf\_1.png](https://www.google.com/search?q=https://storage.googleapis.com/showcase-9fde748c/images/documents/2306.pdf_1.png)" alt="TIES-MERGING 流程图" width="600"/\>
+[cite\_start]*图1：TIES-MERGING 流程示意图。图中，方块代表模型参数，彩色箭头代表不同任务微调后产生的参数更新（即任务向量），箭头的方向代表符号，长度代表幅度。* [cite: 14, 15, 16]
+
+**1. 修剪 (Trim)**
+[cite\_start]此步骤旨在消除冗余参数的干扰 [cite: 30][cite\_start]。具体做法是，对于每个任务向量，只保留其中幅度最大的前 k% 的参数，将其余 (100-k)% 的参数变化重置为 0 [cite: 89][cite\_start]。这等同于将这些冗余参数的权重恢复到它们在预训练模型中的初始值 [cite: 31]。
+
+  - [cite\_start]**操作**：通过一个函数 `keep_topk_reset_rest_to_zero` 来实现 [cite: 75]。
+  - **结果**：原始任务向量 $\\tau\_{t}$ 经过修剪后，得到修剪后的任务向量 $\\hat{\\tau}\_{t}$。在这个新的向量中，只有少数被认为是“有影响力的”（influential）参数的值被保留，其余都为 0。
+
+**2. 选举符号 (Elect Sign)**
+[cite\_start]即使在修剪之后，不同任务向量在同一参数位置上仍可能存在符号冲突 [cite: 32][cite\_start]。此步骤旨在为合并后的模型确定一个统一的符号方向 [cite: 89, 90][cite\_start]。选举规则是选择在所有模型中具有**最大总幅度**的符号 [cite: 91]。
+
+  - **符号定义**：
+
+      - $\\gamma\_{m}$：选举出的最终符号向量。
+      - $\\hat{\\tau}\_{t}^{p}$：表示第 *t* 个任务向量修剪后，第 *p* 个参数的值。
+
+  - **计算公式**：
+    对于每一个参数位置 *p*，最终的符号 $\\gamma\_{m}^{p}$ 通过以下方式高效计算得出：
+    [cite\_start]$$\gamma_{m}^{p} = sgn\left(\sum_{t=1}^{n} \hat{\tau}_{t}^{p}\right) \quad [cite: 94]$$
+    [cite\_start]这里的 *n* 是被合并模型的总数。这个公式的含义是：将所有修剪后的任务向量在参数 *p* 上的值相加，然后取这个和的符号 [cite: 94][cite\_start]。如果正向变化的总幅度大于负向变化的总幅度，最终符号就是+1，反之亦然 [cite: 92, 93]。
+
+**3. 不相交合并 (Disjoint Merge)**
+[cite\_start]最后一步是计算最终的合并后任务向量 $\\tau\_{m}$ [cite: 95][cite\_start]。对于每个参数 *p*，只对那些其符号与上一步选举出的最终符号 $\\gamma\_{m}^{p}$ **一致**的模型参数值进行平均 [cite: 94]。
+
+  - **符号定义**：
+
+      - $\\mathcal{A}^{p}$：对于参数 *p*，这是一个集合，包含了所有其修剪后任务向量符号 $\\hat{\\gamma}*{t}^{p}$ 与选举出的最终符号 $\\gamma*{m}^{p}$ 一致的任务索引 *t*。
+      - $\\tau\_{m}^{p}$：合并后任务向量在参数 *p* 上的最终值。
+
+  - **计算公式**：
+    [cite\_start]$$\tau_{m}^{p} = \frac{1}{|\mathcal{A}^{p}|} \sum_{t \in \mathcal{A}^{p}} \hat{\tau}_{t}^{p} \quad [cite: 95]$$
+    [cite\_start]这个公式表示，只对那些符号“正确”的参数值求平均 [cite: 95][cite\_start]。那些符号相反的或者在修剪步骤中被置为0的参数值，将不参与该位置的计算 [cite: 95]。
+
+#### **生成最终模型**
+
+在得到合并后的任务向量 $\\tau\_{m}$ 后，通过以下公式生成最终的多任务模型参数 $\\theta\_{m}$：
+
+[cite\_start]$$\theta_{m} = \theta_{init} + \lambda \cdot \tau_{m} \quad [cite: 96]$$
+
+  - **符号定义**：
+      - [cite\_start]$\\lambda$：一个缩放超参数（scaling hyperparameter），用于调整合并任务向量的整体影响，其用法借鉴了之前的工作 [cite: 96]。
+
+[cite\_start]通过以上三个步骤，TIES-MERGING 有效地解决了参数冗余和符号冲突带来的干扰，从而在合并多个模型时能够获得更好的性能 [cite: 5, 40]。
+
+
+
+
+
+
+
 这篇论文提出了TIES-MERGING方法，有效解决模型合并时的干扰问题，在多场景下提升了合并模型性能。 
 
 <img src="./assets/image-20250408203257188.png" alt="image-20250408203257188" style="zoom:67%;" />
