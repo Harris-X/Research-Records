@@ -1,0 +1,213 @@
+{
+  "main": {
+    "id": "15209a0ec9cb1567",
+    "type": "split",
+    "children": [
+      {
+        "id": "77d84da62b1160ec",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "c4ffe6ebada63d45",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Paper notes/LLM safety/2024_NIPS_SafeLoRA/Safe LoRA.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Safe LoRA"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "8129572e8af66216",
+    "type": "split",
+    "children": [
+      {
+        "id": "6506c9c0bc052279",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "e2bdac8544485b93",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "文件列表"
+            }
+          },
+          {
+            "id": "cb4a36c3f49dc4a1",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "搜索"
+            }
+          },
+          {
+            "id": "e16ae63252dab8fc",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "书签"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "f463313975a9197d",
+    "type": "split",
+    "children": [
+      {
+        "id": "53b027a104821168",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "e4a765566c956688",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Paper notes/LLM safety/2024_NIPS_SafeLoRA/Safe LoRA.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Safe LoRA 的反向链接列表"
+            }
+          },
+          {
+            "id": "bc0ade4839dbeee2",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Paper notes/LLM safety/2024_NIPS_SafeLoRA/Safe LoRA.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Safe LoRA 的出链列表"
+            }
+          },
+          {
+            "id": "5b2d1af79f4d1224",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "标签"
+            }
+          },
+          {
+            "id": "8395fbf0ba4a564c",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "添加笔记属性"
+            }
+          },
+          {
+            "id": "12d96d4bafd46934",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Paper notes/LLM safety/2024_NIPS_SafeLoRA/Safe LoRA.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Safe LoRA 的大纲"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false,
+      "bases:新建数据库": false
+    }
+  },
+  "active": "e2bdac8544485b93",
+  "lastOpenFiles": [
+    "Paper notes/LLM safety/2024_NIPS_SafeLoRA/复现.md",
+    "Paper notes/LLM safety/TVaccine/T-Vaccine.md",
+    "Paper notes/LLM safety/Booster/Booster.md",
+    "Paper notes/LLM safety/TVaccine",
+    "Paper notes/LLM safety/2024_NIPS_SafeLoRA/Safe LoRA.md",
+    "Paper notes/LLM safety/Booster",
+    "Paper notes/Model Merging/Generalization/2026_ICLR_OptMerge/note.md",
+    "Paper notes/LLM safety/2024_NIPS_SafeLoRA",
+    "Paper notes/LLM safety",
+    "Paper notes/新建文件夹",
+    "Paper notes/Model Merging/Generalization/2026_ICLR_OptMerge/2761_OptMerge_Unifying_Multimo.pdf",
+    "Paper notes/Model Merging/Generalization/2024_ICLR_opttransformer/2310.05719v3.pdf",
+    "Paper notes/Model Merging/Generalization/2024_ACL_LoRA-Flow/LoRA-Flow.md",
+    "Paper notes/Model Merging/Generalization/2024_ACL_LoraRetriever/《LoraRetriever：动态LoRA池与混合任务的高效检索与组合》.md",
+    "Paper notes/Model Merging/Generalization/2024_ACL_LoraRetriever/2402.09997v1.pdf",
+    "Paper notes/Model Merging/Generalization/2025_ACL_LED-MERGING/LED.md",
+    "Paper notes/Model Merging/Generalization/2025_ACL_LED-MERGING/LED-Merging Mitigating Safety-Utility Conflicts in Model Merging with Location-Election-Disjoint.pdf",
+    "Paper notes/Model Merging/Generalization/2025_WUDI/# WUDI-Merging方法详细解析（基于2503.08099v2.pdf）.md",
+    "Paper notes/Model Merging/Generalization/2025_ICLR_WUDI-Merging/WUDI-Merging.md",
+    "Paper notes/Model Merging/Generalization/2025_ICLR_WUDI-Merging/1449_Whoever_Started_the_inter.pdf",
+    "Paper notes/Model Merging/Generalization/2024_LoRA Soups/Lora soup.md",
+    "Paper notes/Model Merging/Generalization/2024_LoRA.rar/LoRA.rar.md",
+    "Paper notes/Model Merging/Generalization/2024_ICLR_Model_Tailor/NOTE.md",
+    "Paper notes/Model Merging/Architecture Transformation/2025_Training-free Heterogeneous/note.md"
+  ]
+}
