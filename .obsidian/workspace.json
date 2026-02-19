@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Paper notes/LLM safety/2024_NIPS_SafeLoRA/SafeLoRA复现.md",
+                "file": "Paper notes/LLM safety/2024_NIPS_SafeLoRA/Safe LoRA.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "SafeLoRA复现"
+              "title": "Safe LoRA"
             }
           }
         ]
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Paper notes/LLM safety/2024_NIPS_SafeLoRA/SafeLoRA复现.md",
+                "file": "Paper notes/LLM safety/Lisa/lisa_复现.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "SafeLoRA复现 的反向链接列表"
+              "title": "lisa_复现 的反向链接列表"
             }
           },
           {
@@ -113,12 +113,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Paper notes/LLM safety/2024_NIPS_SafeLoRA/SafeLoRA复现.md",
+                "file": "Paper notes/LLM safety/Lisa/lisa_复现.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "SafeLoRA复现 的出链列表"
+              "title": "lisa_复现 的出链列表"
             }
           },
           {
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Paper notes/LLM safety/2024_NIPS_SafeLoRA/SafeLoRA复现.md",
+                "file": "Paper notes/LLM safety/Lisa/lisa_复现.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "SafeLoRA复现 的大纲"
+              "title": "lisa_复现 的大纲"
             }
           }
         ]
@@ -185,13 +185,20 @@
   },
   "active": "c4ffe6ebada63d45",
   "lastOpenFiles": [
-    "Paper notes/LLM safety/2024_NIPS_SafeLoRA/Safe LoRA.md",
+    "Paper notes/Model Merging/Generalization/2025_CVPR_TSV/TSV.md",
+    "Paper notes/Model Merging/Generalization/2025_CVPR_TSV/Gargiulo_Task_Singular_Vectors_Reducing_Task_Interference_in_Model_Merging_CVPR_2025_paper (1).pdf",
+    "Paper notes/Model Merging/Generalization/2025_ICLR_KnOTS/KnOTS.md",
+    "Paper notes/Model Merging/Generalization/2025_ICLR_KnOTS/2410.19735v1.pdf",
+    "Paper notes/LLM safety/Lisa/lisa_复现.md",
+    "Paper notes/LLM safety/Lisa/lisa.md",
+    "Paper notes/LLM safety/TVaccine/T-Vaccine复现.md",
+    "Paper notes/LLM safety/Lisa",
     "Paper notes/LLM safety/Booster/Booster复现.md",
+    "Paper notes/LLM safety/2024_NIPS_SafeLoRA/SafeLoRA复现.md",
     "Paper notes/LLM safety/Booster/Booster.md",
+    "Paper notes/LLM safety/2024_NIPS_SafeLoRA/Safe LoRA.md",
     "Paper notes/LLM safety/TVaccine/T-Vaccine.md",
     "Paper notes/LLM safety/TVaccine/复现.md",
-    "Paper notes/LLM safety/TVaccine/T-Vaccine复现.md",
-    "Paper notes/LLM safety/2024_NIPS_SafeLoRA/SafeLoRA复现.md",
     "Paper notes/LLM safety/TVaccine",
     "Paper notes/LLM safety/Booster",
     "Paper notes/Model Merging/Generalization/2026_ICLR_OptMerge/note.md",
@@ -202,12 +209,9 @@
     "Paper notes/Model Merging/Generalization/2024_ICLR_opttransformer/2310.05719v3.pdf",
     "Paper notes/Model Merging/Generalization/2024_ACL_LoRA-Flow/LoRA-Flow.md",
     "Paper notes/Model Merging/Generalization/2024_ACL_LoraRetriever/《LoraRetriever：动态LoRA池与混合任务的高效检索与组合》.md",
-    "Paper notes/Model Merging/Generalization/2024_ACL_LoraRetriever/2402.09997v1.pdf",
     "Paper notes/Model Merging/Generalization/2025_ACL_LED-MERGING/LED.md",
-    "Paper notes/Model Merging/Generalization/2025_ACL_LED-MERGING/LED-Merging Mitigating Safety-Utility Conflicts in Model Merging with Location-Election-Disjoint.pdf",
     "Paper notes/Model Merging/Generalization/2025_WUDI/# WUDI-Merging方法详细解析（基于2503.08099v2.pdf）.md",
     "Paper notes/Model Merging/Generalization/2025_ICLR_WUDI-Merging/WUDI-Merging.md",
-    "Paper notes/Model Merging/Generalization/2025_ICLR_WUDI-Merging/1449_Whoever_Started_the_inter.pdf",
     "Paper notes/Model Merging/Generalization/2024_LoRA Soups/Lora soup.md",
     "Paper notes/Model Merging/Generalization/2024_LoRA.rar/LoRA.rar.md",
     "Paper notes/Model Merging/Generalization/2024_ICLR_Model_Tailor/NOTE.md",
