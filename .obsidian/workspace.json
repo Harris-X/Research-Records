@@ -11,14 +11,12 @@
             "id": "c4ffe6ebada63d45",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "pdf",
               "state": {
-                "file": "Paper notes/Model Merging/Generalization/2025_ICML_ISO/iso_notes.md",
-                "mode": "source",
-                "source": false
+                "file": "Paper notes/Model Merging/Generalization/2025_ICLR_WUDI-Merging/1449_Whoever_Started_the_inter.pdf"
               },
-              "icon": "lucide-file",
-              "title": "iso_notes"
+              "icon": "lucide-file-text",
+              "title": "1449_Whoever_Started_the_inter"
             }
           }
         ]
@@ -185,39 +183,41 @@
   },
   "active": "c4ffe6ebada63d45",
   "lastOpenFiles": [
-    "Paper notes/Model Merging/Generalization/2026_ICLR_OptMerge/note.md",
+    "Paper notes/Model Merging/base/TIES-Merging/2306.pdf",
+    "Paper notes/Model Merging/base/2023_NIPS_Task_arithmetic/2305.12827v3.pdf",
     "Paper notes/Model Merging/Generalization/2025_ICML_ISO/iso_notes.md",
-    "Paper notes/Model Merging/Generalization/2025_ICML_ISO",
-    "Paper notes/Model Merging/Generalization/2025_ICLR_WUDI-Merging/WUDI-Merging.md",
-    "Paper notes/Model Merging/Generalization/2025_ICLR_WUDI-Merging/1449_Whoever_Started_the_inter.pdf",
-    "Paper notes/Model Merging/Generalization/2025_WUDI/# WUDI-Merging方法详细解析（基于2503.08099v2.pdf）.md",
-    "Paper notes/Model Merging/Generalization/2025_WUDI/2503.08099v2.pdf",
-    "Paper notes/Model Merging/Generalization/2025_ICLR_LORA-LEGO/LORA-LEGO.md",
-    "Paper notes/Model Merging/Generalization/2025_ICLR_LORA-LEGO/2409.16167v3.pdf",
-    "Paper notes/Model Merging/Generalization/2025_Subspace-Boosted Model Merging/Subspace-Boosted Model Merging.pdf",
-    "Paper notes/Model Merging/Generalization/2025_Subspace-Boosted Model Merging/Subspace-Boosted.pdf",
-    "Paper notes/Model Merging/Generalization/2025_Subspace-Boosted Model Merging/Subspace-Boosted.md",
+    "Paper notes/Model Merging/base/2023_NIPS_Task_arithmetic",
+    "Paper notes/Model Merging/Generalization/2025_ICML_ISO/2502.04959v3.pdf",
+    "Paper notes/Model Merging/Generalization/2025_ICML_ISO/2502.04959v3 (3).pdf",
+    "Paper notes/Model Merging/Generalization/2025_CVPR_TSV/Gargiulo_Task_Singular_Vectors_Reducing_Task_Interference_in_Model_Merging_CVPR_2025_paper (1).pdf",
+    "Paper notes/Model Merging/Generalization/2026_OrthoMerge/OrthoMerge.md",
+    "Paper notes/Model Merging/Generalization/2026_OrthoMerge/新建文本文档.txt",
+    "Paper notes/Model Merging/Generalization/2026_OrthoMerge/2602.05943v1.pdf",
+    "Paper notes/Model Merging/Generalization/2026_OrthoMerge",
+    "Paper notes/Model Merging/Generalization/新建文件夹",
+    "Paper notes/Model Merging/Generalization/2024_EMNLP_MetaGPT/metagpt.md",
+    "Paper notes/Model Merging/Generalization/2024_EMNLP_MetaGPT/2024.emnlp-main.102.pdf",
+    "Paper notes/Model Merging/Generalization/2025_CVPR_IterIS/《IterIS 方法：解决 LoRA 合并问题的有效途径》.md",
     "Paper notes/Model Merging/Generalization/2025_CVPR_TSV/TSV.md",
+    "Paper notes/Model Merging/Generalization/2026_ICLR_OptMerge/OPTMERGE.md",
+    "Paper notes/Model Merging/Generalization/2025_ICLR_WUDI-Merging/WUDI-Merging.md",
+    "Paper notes/Model Merging/Generalization/2026_ICLR_OptMerge/note.md",
+    "Paper notes/Model Merging/Generalization/2025_WUDI/WUDI-Merging方法详细解析（基于2503.08099v2.pdf）.md",
+    "Paper notes/Model Merging/Generalization/2025_ICLR_LORA-LEGO/LORA-LEGO.md",
+    "Paper notes/Model Merging/Generalization/2025_Subspace-Boosted Model Merging/Subspace-Boosted.md",
     "Paper notes/Model Merging/Generalization/2025_ICLR_KnOTS/KnOTS.md",
     "Paper notes/LLM safety/2024_NIPS_SafeLoRA/Safe LoRA.md",
-    "Paper notes/Model Merging/Generalization/2025_CVPR_TSV/Gargiulo_Task_Singular_Vectors_Reducing_Task_Interference_in_Model_Merging_CVPR_2025_paper (1).pdf",
-    "Paper notes/Model Merging/Generalization/2025_ICLR_KnOTS/2410.19735v1.pdf",
     "Paper notes/LLM safety/Lisa/lisa_复现.md",
     "Paper notes/LLM safety/Lisa/lisa.md",
     "Paper notes/LLM safety/TVaccine/T-Vaccine复现.md",
-    "Paper notes/LLM safety/Lisa",
     "Paper notes/LLM safety/Booster/Booster复现.md",
     "Paper notes/LLM safety/2024_NIPS_SafeLoRA/SafeLoRA复现.md",
     "Paper notes/LLM safety/Booster/Booster.md",
     "Paper notes/LLM safety/TVaccine/T-Vaccine.md",
     "Paper notes/LLM safety/TVaccine/复现.md",
-    "Paper notes/LLM safety/TVaccine",
     "Paper notes/Model Merging/Generalization/2024_ACL_LoRA-Flow/LoRA-Flow.md",
     "Paper notes/Model Merging/Generalization/2024_ACL_LoraRetriever/《LoraRetriever：动态LoRA池与混合任务的高效检索与组合》.md",
     "Paper notes/Model Merging/Generalization/2025_ACL_LED-MERGING/LED.md",
-    "Paper notes/Model Merging/Generalization/2024_LoRA Soups/Lora soup.md",
-    "Paper notes/Model Merging/Generalization/2024_LoRA.rar/LoRA.rar.md",
-    "Paper notes/Model Merging/Generalization/2024_ICLR_Model_Tailor/NOTE.md",
-    "Paper notes/Model Merging/Architecture Transformation/2025_Training-free Heterogeneous/note.md"
+    "Paper notes/Model Merging/Generalization/2024_LoRA Soups/Lora soup.md"
   ]
 }
